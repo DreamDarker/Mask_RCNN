@@ -28,13 +28,13 @@ sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local versio
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 # print("MODEL_DIR:", MODEL_DIR)
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/shapes20190511T2153/mask_rcnn_shapes_0002.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/shapes20190709T1055/mask_rcnn_shapes_0002.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
 
 # Directory of images to run detection on
-IMAGE_DIR = "C:/Users/12084/Desktop/Proj/data/5-11/img/"
+IMAGE_DIR = "C:/Users/12084/Desktop/Proj/data/5-11/img G/"
 
 
 class ShapesConfig(Config):
@@ -67,7 +67,7 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 50
+    STEPS_PER_EPOCH = 100
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 5

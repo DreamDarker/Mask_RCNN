@@ -66,7 +66,7 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 50
+    STEPS_PER_EPOCH = 100
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 5
@@ -129,7 +129,8 @@ class DrugDataset(utils.Dataset):
             mask_path = mask_folder + "/" + filestr + ".png"
             yaml_path = dataset_root_path + "dataset/" + filestr + "_json/info.yaml"
             print(dataset_root_path + "dataset/" + filestr + "_json/img.png")
-            cv_img = cv2.imread(dataset_root_path + "dataset/" + filestr + "_json/img.png")
+            # cv_img = cv2.imread(dataset_root_path + "dataset/" + filestr + "_json/img.png")
+            cv_img = cv2.imread(img_folder + "/" + filestr + ".jpg")
 
             self.add_image("shapes", image_id=i, path=img_folder + "/" + imglist[i],
                            width=cv_img.shape[1], height=cv_img.shape[0], mask_path=mask_path, yaml_path=yaml_path)
@@ -181,8 +182,8 @@ def get_ax(rows=1, cols=1, size=8):
 
 
 # TODO:路径设置
-dataset_root_path = "C:/Users/12084/Desktop/Proj/data/7-8/"
-img_folder = dataset_root_path + "img"
+dataset_root_path = "C:/Users/12084/Desktop/Proj/data/5-11/"
+img_folder = dataset_root_path + "img G"
 mask_folder = dataset_root_path + "mask"
 
 # yaml_folder = dataset_root_path
@@ -274,7 +275,7 @@ print("Loading weights from ", model_path)
 model.load_weights(model_path, by_name=True)
 
 
-# Test on 10 random images
+# Test on 2 random images
 for i in range(10):
     image_id = random.choice(dataset_val.image_ids)
     original_image, image_meta, gt_class_id, gt_bbox, gt_mask =\
