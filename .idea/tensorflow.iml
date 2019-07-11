@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
+    <option name="projectConfiguration" value="单元测试" />
     <option name="PROJECT_TEST_RUNNER" value="单元测试" />
   </component>
 </module>

@@ -18,6 +18,7 @@ from mrcnn import visualize
 import yaml
 from mrcnn.model import log
 from PIL import Image
+import path
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # Root directory of the project
@@ -54,7 +55,6 @@ class ShapesConfig(Config):
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
-    # TODO: img pixel
     IMAGE_MIN_DIM = 384
     IMAGE_MAX_DIM = 384
 
@@ -106,31 +106,24 @@ class DrugDataset(utils.Dataset):
 
     # 重新写load_shapes，里面包含自己的类别,可以任意添加
     # 并在self.image_info信息中添加了path、mask_path 、yaml_path
-    # yaml_path, dataset_root_path = "/tongue_dateset/"
-    # img_folder = dataset_root_path + "rgb"
-    # mask_folder = dataset_root_path + "mask"
-    # dataset_root_path = "/tongue_dateset/"
-    def load_shapes(self, count, img_folder, mask_folder, imglist, dataset_root_path):
+    def load_shapes(self, count, img_folder, imglist):
         """Generate the requested number of synthetic images.
         count: number of images to generate.
         height, width: the size of the generated images.
         """
         # Add classes,可通过这种方式扩展多个物体
-        self.add_class("shapes", 1, "gland") # 黑色素瘤
+        self.add_class("shapes", 1, "gland")
         # self.add_class("shapes", 2, "triangle")
         # self.add_class("shapes", 3, "white")
         for i in range(1, count):
-            # 获取图片宽和高
-            print(i)
             filestr = imglist[i].split(".")[0]
             # print(imglist[i],"-->",cv_img.shape[1],"--->",cv_img.shape[0])
             # print("id-->", i, " imglist[", i, "]-->", imglist[i],"filestr-->",filestr)
             # filestr = filestr.split("_")[1]
-            mask_path = mask_folder + "/" + filestr + ".png"
-            yaml_path = dataset_root_path + "dataset/" + filestr + "_json/info.yaml"
-            print(dataset_root_path + "dataset/" + filestr + "_json/img.png")
-            # cv_img = cv2.imread(dataset_root_path + "dataset/" + filestr + "_json/img.png")
-            cv_img = cv2.imread(img_folder + "/" + filestr + ".jpg")
+
+            mask_path = path.get_mask_path(filestr)
+            yaml_path = path.get_yaml_path(filestr)
+            cv_img = cv2.imread(path.get_img_path(filestr))
 
             self.add_image("shapes", image_id=i, path=img_folder + "/" + imglist[i],
                            width=cv_img.shape[1], height=cv_img.shape[0], mask_path=mask_path, yaml_path=yaml_path)
@@ -181,24 +174,22 @@ def get_ax(rows=1, cols=1, size=8):
     return ax
 
 
-# TODO:路径设置
-dataset_root_path = "C:/Users/12084/Desktop/Proj/data/5-11/"
-img_folder = dataset_root_path + "img G"
-mask_folder = dataset_root_path + "mask"
-
-# yaml_folder = dataset_root_path
+# 路径设置
+dataset_root_path = path.get_root_path()
+img_folder = path.get_img_folder()
+mask_folder = path.get_mask_folder()
 imglist = os.listdir(img_folder)
 count = len(imglist)
 
 # train与val数据集准备
 dataset_train = DrugDataset()
-dataset_train.load_shapes(count, img_folder, mask_folder, imglist, dataset_root_path)
+dataset_train.load_shapes(count, img_folder, imglist)
 dataset_train.prepare()
 
 # print("dataset_train-->",dataset_train._image_ids)
 
 dataset_val = DrugDataset()
-dataset_val.load_shapes(count, img_folder, mask_folder, imglist, dataset_root_path)
+dataset_val.load_shapes(count, img_folder, imglist)
 dataset_val.prepare()
 
 # print("dataset_val-->",dataset_val._image_ids)
