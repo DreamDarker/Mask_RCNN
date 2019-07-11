@@ -28,13 +28,13 @@ sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local versio
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 # print("MODEL_DIR:", MODEL_DIR)
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/shapes20190709T1530/mask_rcnn_shapes_0002.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/shapes20190711T1451/mask_rcnn_shapes_0002.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
 
 # Directory of images to run detection on
-IMAGE_DIR = "C:/Users/12084/Desktop/Proj/data/an_img/test_result/"
+IMAGE_DIR = "C:/Users/12084/Desktop/Proj/data/7-11/"
 
 
 class ShapesConfig(Config):
@@ -96,12 +96,14 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 class_names = ['BG', 'gland']
 # Load a random image from the images folder
 file_names = next(os.walk(IMAGE_DIR))[2]
-for i in range(2):
+for i in range(5):
     # print(file_names)
     # print(IMAGE_DIR)
-    # img_dir = os.path.join(IMAGE_DIR, random.choice(file_names))
-    # img_id = str(i) + '.jpg'
-    img_dir = os.path.join(IMAGE_DIR, "test2.png")
+
+    img_dir = os.path.join(IMAGE_DIR, random.choice(file_names))
+    # img_id = str(i) + '.png'
+    # img_dir = os.path.join(IMAGE_DIR, "test2.png")
+
     print(img_dir)
     image = skimage.io.imread(img_dir)
     # print(image)

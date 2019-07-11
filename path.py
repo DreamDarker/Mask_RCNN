@@ -1,4 +1,4 @@
-dataset_root_path = "C:/Users/12084/Desktop/Proj/data/an_img/img_result G/1/"
+dataset_root_path = "C:/Users/12084/Desktop/Proj/data/7-11/"
 
 
 def get_root_path():
@@ -6,11 +6,11 @@ def get_root_path():
 
 
 def get_img_folder():
-    return dataset_root_path + "img G"
+    return dataset_root_path + "img-resized"
 
 
 def get_mask_folder():
-    return dataset_root_path + "mask 8"
+    return dataset_root_path + "mask8"
 
 
 def get_yaml_path(filestr):
@@ -19,12 +19,12 @@ def get_yaml_path(filestr):
 
 def get_img_path(filestr):
     return dataset_root_path + "dataset/" + filestr + "_json/img.png"
-    # return self.dataset_root_path + "img G" + "/" + filestr + ".png"
+    # return dataset_root_path + "img G" + "/" + filestr + ".png"
 
 
 def get_mask_path(filestr):
-    return dataset_root_path + "dataset/" + filestr + "_json/label.png"
-    # return self.dataset_root_path + "mask 8" + "/" + filestr + ".png"
+    # return dataset_root_path + "dataset/" + filestr + "_json/label.png"
+    return dataset_root_path + "mask8" + "/" + filestr + ".png"
 
 
 def main():

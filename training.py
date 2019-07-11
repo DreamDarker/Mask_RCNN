@@ -66,7 +66,7 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 100
+    STEPS_PER_EPOCH = 50
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 5
@@ -94,7 +94,7 @@ class DrugDataset(utils.Dataset):
         return labels
 
     # 重新写draw_mask
-    def draw_mask(self, num_obj, mask, image,image_id):
+    def draw_mask(self, num_obj, mask, image, image_id):
         info = self.image_info[image_id]
         for index in range(num_obj):
             for i in range(info['width']):
@@ -177,7 +177,7 @@ def get_ax(rows=1, cols=1, size=8):
 # 路径设置
 dataset_root_path = path.get_root_path()
 img_folder = path.get_img_folder()
-mask_folder = path.get_mask_folder()
+# mask_folder = path.get_mask_folder()
 imglist = os.listdir(img_folder)
 count = len(imglist)
 
