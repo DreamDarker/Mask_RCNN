@@ -48,15 +48,15 @@ class ShapesConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 8
+    IMAGES_PER_GPU = 4
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # background + 3 shapes
+    NUM_CLASSES = 1 + 2  # background + 2 shapes
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
-    IMAGE_MIN_DIM = 384
-    IMAGE_MAX_DIM = 384
+    IMAGE_MIN_DIM = 512
+    IMAGE_MAX_DIM = 512
 
     # Use smaller anchors because our image and objects are small
     RPN_ANCHOR_SCALES = (8 * 4, 16 * 4, 32 * 4, 64 * 4, 128 * 4)  # anchor side in pixels
@@ -66,12 +66,18 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 50
+    STEPS_PER_EPOCH = 100
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 5
 
     # MAX_GT_INSTANCES = 5
+
+    # IMAGE_RESIZE_MODE = "pad64"
+
+    # DETECTION_NMS_THRESHOLD = 0.0
+
+
 
 
 config = ShapesConfig()
@@ -112,10 +118,11 @@ class DrugDataset(utils.Dataset):
         height, width: the size of the generated images.
         """
         # Add classes,可通过这种方式扩展多个物体
-        self.add_class("shapes", 1, "gland")
-        # self.add_class("shapes", 2, "triangle")
+        self.add_class("shapes", 1, "b")
+        self.add_class("shapes", 2, "g")
         # self.add_class("shapes", 3, "white")
-        for i in range(1, count):
+        # print(imglist)
+        for i in range(0, count):
             filestr = imglist[i].split(".")[0]
             # print(imglist[i],"-->",cv_img.shape[1],"--->",cv_img.shape[0])
             # print("id-->", i, " imglist[", i, "]-->", imglist[i],"filestr-->",filestr)
@@ -149,12 +156,12 @@ class DrugDataset(utils.Dataset):
         labels = self.from_yaml_get_class(image_id)
         labels_form = []
         for i in range(len(labels)):
-            if labels[i].find("gland") != -1:
+            if labels[i].find("b") != -1:
                 # print "box"
-                labels_form.append("gland")
-            # elif labels[i].find("triangle")!=-1:
-            #     #print "column"
-            #     labels_form.append("triangle")
+                labels_form.append("b")
+            elif labels[i].find("g") != -1:
+                #print "column"
+                labels_form.append("g")
             # elif labels[i].find("white")!=-1:
             #     #print "package"
             #     labels_form.append("white")
@@ -246,6 +253,12 @@ class InferenceConfig(ShapesConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
 
+    # 设置可信度阈值
+    # DETECTION_MIN_CONFIDENCE = 0.9
+
+    # 0.0关闭重叠
+    # DETECTION_NMS_THRESHOLD = 0.0
+
 
 inference_config = InferenceConfig()
 MODEL_DIR = os.path.join(ROOT_DIR, "logs/")
@@ -279,8 +292,8 @@ for i in range(10):
     log("gt_bbox", gt_bbox)
     log("gt_mask", gt_mask)
 
-    visualize.display_instances(original_image, gt_bbox, gt_mask, gt_class_id,
-                                dataset_train.class_names, figsize=(8, 8))
+    # visualize.display_instances(original_image, gt_bbox, gt_mask, gt_class_id,
+    #                             dataset_train.class_names, figsize=(8, 8))
 
     results = model.detect([original_image], verbose=1)
 

@@ -7,5 +7,5 @@ set /a a+=1
 echo.%a%
 set "str2=%a%%str1%"
 labelme_json_to_dataset %str2%
-if %a% == 41 goto end
+if %a% == 300 goto end
 goto loop

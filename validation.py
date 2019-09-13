@@ -28,13 +28,13 @@ sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local versio
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 # print("MODEL_DIR:", MODEL_DIR)
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/shapes20190711T1451/mask_rcnn_shapes_0002.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/RGB whole b&g/mask_rcnn_shapes_0002.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
 
 # Directory of images to run detection on
-IMAGE_DIR = "C:/Users/12084/Desktop/Proj/data/7-11/"
+IMAGE_DIR = "D:/zxl/Proj/data/9-8/img"
 
 
 class ShapesConfig(Config):
@@ -49,18 +49,18 @@ class ShapesConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 8
+    IMAGES_PER_GPU = 4
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # background + 3 shapes
+    NUM_CLASSES = 1 + 2  # background + 3 shapes
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
-    IMAGE_MIN_DIM = 384
-    IMAGE_MAX_DIM = 384
+    IMAGE_MIN_DIM = 512
+    IMAGE_MAX_DIM = 512
 
     # Use smaller anchors because our image and objects are small
-    RPN_ANCHOR_SCALES = (8 * 4, 16 * 4, 32 * 4, 64 * 4, 128 * 4)  # anchor side in pixels
+    RPN_ANCHOR_SCALES = (32 * 2, 48 * 2, 64 * 2, 96 * 2, 128 * 2)  # anchor side in pixels
 
     # Reduce training ROIs per image because the images are small and have
     # few objects. Aim to allow ROI sampling to pick 33% positive ROIs.
@@ -70,8 +70,13 @@ class ShapesConfig(Config):
     STEPS_PER_EPOCH = 100
 
     # use small validation steps since the epoch is small
-    VALIDATION_STEPS = 5
+    VALIDATION_STEPS = 50
 
+    # 设置可信度阈值
+    # DETECTION_MIN_CONFIDENCE = 0.9
+
+    # 0.0关闭重叠
+    # DETECTION_NMS_THRESHOLD = 0.0
 
 # import train_tongue
 # class InferenceConfig(coco.CocoConfig):
@@ -80,6 +85,12 @@ class InferenceConfig(ShapesConfig):
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
+
+    # 设置可信度阈值
+    # DETECTION_MIN_CONFIDENCE = 0.9
+
+    # 0.0关闭重叠
+    DETECTION_NMS_THRESHOLD = 0.0
 
 
 config = InferenceConfig()
@@ -93,16 +104,16 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 # COCO Class names
 # Index of the class in the list is its ID. For example, to get ID of
 # the teddy bear class, use: class_names.index('teddy bear')
-class_names = ['BG', 'gland']
+class_names = ['BG', 'b', 'g']
 # Load a random image from the images folder
 file_names = next(os.walk(IMAGE_DIR))[2]
-for i in range(5):
+for i in range(10):
     # print(file_names)
     # print(IMAGE_DIR)
 
     img_dir = os.path.join(IMAGE_DIR, random.choice(file_names))
     # img_id = str(i) + '.png'
-    # img_dir = os.path.join(IMAGE_DIR, "test2.png")
+    # img_dir = os.path.join(IMAGE_DIR, "21.jpg")
 
     print(img_dir)
     image = skimage.io.imread(img_dir)
